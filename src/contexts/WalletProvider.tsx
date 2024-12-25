@@ -53,7 +53,7 @@ const DEFAULT_FORM_DATA: FormData = {
 
 export type TransactionType = {
   hash: string;
-  status: "pending" | "confirmed" | "failed";
+  status: "pending" | "confirming" | "confirmed" | "failed";
 };
 
 export const WalletProvider: React.FunctionComponent<Props> = ({

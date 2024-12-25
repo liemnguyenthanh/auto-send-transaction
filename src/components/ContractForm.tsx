@@ -31,7 +31,11 @@ export function ContractForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     updateError();
-    updateTransaction();
+
+    updateTransaction({
+      status: "pending",
+      hash: "",
+    });
     setIsLoading(true);
     try {
       const { rpc, privateKey, contractAddress, abi, method, args } = formData;
@@ -54,10 +58,18 @@ export function ContractForm() {
       });
       console.log("argsArray", argsArray);
       const tx = await contract[method](...argsArray);
+      updateTransaction({
+        status: "confirming",
+        hash: tx.hash,
+      });
       console.log("Transaction sent:", tx.hash);
 
       // Wait for confirmation
       const receipt = await tx.wait();
+      updateTransaction({
+        status: "confirmed",
+        hash: receipt.transactionHash,
+      });
       console.log("Transaction confirmed:", receipt);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
